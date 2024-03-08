@@ -1,5 +1,23 @@
 local plugins = {
   {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "pyright",
+        "clangd",
+        "clang-format",
+        "codelldb",
+        "mypy",
+        "ruff",
+        "black",
+        "debugpy",
+        "gopls",
+        "golines",
+        "goimports",
+      }
+    }
+  },
+  {
     "theprimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -79,20 +97,5 @@ local plugins = {
       require "custom.configs.lspconfig"
     end,
   },
-  {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "pyright",
-        "clangd",
-        "clang-format",
-        "codelldb",
-        "mypy",
-        "ruff",
-        "black",
-        "debugpy",
-      }
-    }
-  }
 }
 return plugins
