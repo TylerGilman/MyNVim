@@ -14,6 +14,12 @@ local plugins = {
         "gopls",
         "golines",
         "goimports",
+        "htmx-lsp",
+        "css-lsp",
+        "html-lsp",
+        "tailwindcss-language-server",
+        "lsp-zero",
+        "templ",
       }
     }
   },
