@@ -18,10 +18,9 @@ local plugins = {
         "css-lsp",
         "html-lsp",
         "tailwindcss-language-server",
-        "lsp-zero",
         "templ",
       }
-    }
+    },
   },
   {
     "theprimeagen/harpoon",
