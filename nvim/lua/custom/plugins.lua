@@ -83,6 +83,9 @@ local plugins = {
     },
   },
   {
+    "joerdav/templ.vim"
+  },
+  {
     "mfussenegger/nvim-dap",
     config = function(_, _)
       require("core.utils").load_mappings("dap")

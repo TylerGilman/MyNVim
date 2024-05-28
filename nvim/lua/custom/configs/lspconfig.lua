@@ -5,6 +5,7 @@ local util = require("lspconfig.util")
 
 local servers = {"clangd", "pyright", "htmx", "gopls", "html-lsp", "css-lsp", "tailwindcss-language-server", "templ" }
 
+vim.treesitter.language.register('templ', 'go')
 
 local on_attach = function(_, _)
   vim.filetype.add({ extension = { templ = "templ" } })
@@ -33,7 +34,6 @@ treesitter_parser_config.templ = treesitter_parser_config.templ or {
   },
 }
 
-vim.treesitter.language.register('templ', 'templ')
 
 -- Register the LSP as a config
 local configs = require 'lspconfig.configs'
@@ -71,3 +71,4 @@ lspconfig.html.setup({
     capabilities = capabilities,
     filetypes = { "html", "templ" },
 })
+
