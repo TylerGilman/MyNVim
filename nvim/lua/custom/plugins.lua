@@ -11,7 +11,6 @@ local plugins = {
         "ruff",
         "black",
         "debugpy",
-        "gopls",
         "golines",
         "goimports",
         "htmx-lsp",

@@ -3,7 +3,7 @@ local capabilities = base.capabilities
 local lspconfig = require("lspconfig")
 local util = require("lspconfig.util")
 
-local servers = {"clangd", "pyright", "htmx", "gopls", "html-lsp", "css-lsp", "tailwindcss-language-server", "templ" }
+local servers = {"clangd", "pyright", "htmx", "html-lsp", "css-lsp", "tailwindcss-language-server", "templ" }
 
 vim.treesitter.language.register('templ', 'go')
 
@@ -48,23 +48,7 @@ if not configs.templ then
   }
 end
 
--- Separate configuration for gopls with additional settings
-lspconfig.gopls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = {"gopls"},
-  filetypes = {"go", "gomod", "gowork", "templ"},
-  root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-  settings = {
-    gopls = {
-      completeUnimported = true,
-      usePlaceholders = true,
-      analyses = {
-        unusedparams = true,
-      },
-    },
-  },
-}
+
 
 lspconfig.html.setup({
     on_attach = on_attach,
