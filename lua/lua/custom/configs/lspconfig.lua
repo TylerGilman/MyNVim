@@ -9,7 +9,8 @@ local servers = {
     "html",
     "cssls",
     "tailwindcss",
-    "templ"
+    "templ",
+    "sqlls"    -- Add SQL language server
 }
 
 -- Register 'templ' as a Go-related filetype
@@ -33,6 +34,20 @@ for _, lsp in ipairs(servers) do
         capabilities = capabilities,
     }
 end
+
+-- Setup null-ls
+local null_ls = require("null-ls")
+local null_opts = {
+    debug = true,
+    sources = {
+        null_ls.builtins.formatting.clang_format,
+        null_ls.builtins.diagnostics.mypy,
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.gofumpt,
+        null_ls.builtins.formatting.goimports_reviser,
+        null_ls.builtins.formatting.templ,
+    },
+}
 
 -- Make sure we have a tree-sitter grammar for the language
 local treesitter_parser_config = require("nvim-treesitter.parsers").get_parser_configs()
@@ -63,3 +78,5 @@ lspconfig.html.setup({
     capabilities = capabilities,
     filetypes = { "html", "templ" },
 })
+
+return null_opts
