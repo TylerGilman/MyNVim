@@ -22,6 +22,9 @@ local plugins = {
     },
   },
   {
+    "nvim-neotest/nvim-nio"
+  },
+  {
     "theprimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -71,30 +74,63 @@ local plugins = {
     end
   },
   {
+    "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require('dap')
+      dap.configurations.cpp = {
+        {
+          name = "Launch",
+          type = "codelldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          stopOnEntry = false,
+          args = {},
+        },
+      }
+      dap.configurations.c = dap.configurations.cpp
+    end,
+  },
+  {
     "jay-babu/mason-nvim-dap.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap",
-    },
     opts = {
-      handlers = {},
-    },
+      handlers = {
+        codelldb = {
+          setup = function()
+            local dap = require("dap")
+            dap.adapters.codelldb = {
+              type = 'server',
+              port = "${port}",
+              executable = {
+                command = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/adapter/codelldb",
+                args = {"--port", "${port}"},
+              }
+            }
+          end
+        }
+      }
+    }
   },
   {
     "joerdav/templ.vim"
   },
   {
-    "mfussenegger/nvim-dap",
-    config = function(_, _)
-      require("core.utils").load_mappings("dap")
-    end
-  },
-  {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
     opts = function()
-      return require "custom.configs.null-ls"
+      local null_ls = require("null-ls")
+      return {
+        sources = {
+          null_ls.builtins.formatting.clang_format,
+          null_ls.builtins.diagnostics.ruff,
+          null_ls.builtins.diagnostics.mypy,
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.gofumpt,
+          null_ls.builtins.formatting.goimports_reviser,
+        },
+      }
     end,
   },
   {
@@ -104,5 +140,43 @@ local plugins = {
       require "custom.configs.lspconfig"
     end,
   },
+  {
+    "p00f/clangd_extensions.nvim",
+    lazy = true,
+    config = function() end,
+    opts = {
+      inlay_hints = {
+        inline = false,
+      },
+      ast = {
+        --These require codicons (https://github.com/microsoft/vscode-codicons)
+        role_icons = {
+          type = "",
+          declaration = "",
+          expression = "",
+          specifier = "",
+          statement = "",
+          ["template argument"] = "",
+        },
+        kind_icons = {
+          Compound = "",
+          Recovery = "",
+          TranslationUnit = "",
+          PackExpansion = "",
+          TemplateTypeParm = "",
+          TemplateTemplateParm = "",
+          TemplateParamObject = "",
+        },
+      },
+    },
+  },
+  {
+    "Civitasv/cmake-tools.nvim",
+    opts = {
+      cmake_command = "cmake",
+      cmake_build_directory = "build",
+      cmake_generate_options = { "-D", "CMAKE_EXPORT_COMPILE_COMMANDS=1" },
+    },
+  }
 }
 return plugins

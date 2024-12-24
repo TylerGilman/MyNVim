@@ -25,5 +25,23 @@ M.dap_python = {
   }
 }
 
+M.cpp = {
+  plugin = true,
+  n = {
+    ["<leader>ctr"] = {
+      function()
+        vim.cmd("CMakeRun")
+      end,
+      "CMake Run",
+    },
+    ["<leader>ctb"] = {
+      function()
+        vim.cmd("CMakeBuild")
+      end,
+      "CMake Build",
+    },
+  },
+}
+
 
 return M
