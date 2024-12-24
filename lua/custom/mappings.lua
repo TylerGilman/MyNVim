@@ -1,17 +1,18 @@
 local M = {}
 
+
 M.dap = {
   plugin = true,
   n = {
-      ["<leader>db"] = {
-        "<cmd> DapToggleBreakpoint <CR>",
-        "ADD breakpoint at line",
-      },
-      ["<leader>dr"] = {
-        "<cmd> DapContinue <CR>",
-        "Start or continue the debugger",
-      }
-    }
+    ["<leader>db"] = {
+      "<cmd> DapToggleBreakpoint <CR>",
+      "Toggle breakpoint",
+    },
+    ["<leader>dr"] = {
+      "<cmd> DapContinue <CR>",
+      "Continue debugger",
+    },
+  }
 }
 
 M.dap_python = {
@@ -28,20 +29,9 @@ M.dap_python = {
 M.cpp = {
   plugin = true,
   n = {
-    ["<leader>ctr"] = {
-      function()
-        vim.cmd("CMakeRun")
-      end,
-      "CMake Run",
-    },
-    ["<leader>ctb"] = {
-      function()
-        vim.cmd("CMakeBuild")
-      end,
-      "CMake Build",
-    },
-  },
+    ["<leader>cm"] = { "<cmd> CMakeBuild <CR>", "CMake Build" },
+    ["<leader>cr"] = { "<cmd> CMakeRun <CR>", "CMake Run" },
+  }
 }
-
 
 return M

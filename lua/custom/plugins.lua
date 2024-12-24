@@ -24,6 +24,13 @@ local plugins = {
   {
     "nvim-neotest/nvim-nio"
   },
+{
+  "mfussenegger/nvim-dap",
+  lazy = false,  -- or remove event/ft triggers
+  config = function(_, _)
+    require("core.utils").load_mappings("dap")
+  end,
+},
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
@@ -74,44 +81,48 @@ local plugins = {
     end
   },
   {
-    "mfussenegger/nvim-dap",
-    config = function()
-      local dap = require('dap')
-      dap.configurations.cpp = {
-        {
-          name = "Launch",
-          type = "codelldb",
-          request = "launch",
-          program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-          end,
-          cwd = '${workspaceFolder}',
-          stopOnEntry = false,
-          args = {},
-        },
-      }
-      dap.configurations.c = dap.configurations.cpp
-    end,
-  },
-  {
     "jay-babu/mason-nvim-dap.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+      "rcarriga/nvim-dap-ui",
+    },
     opts = {
+      -- optionally ensure codelldb is installed automatically:
+      ensure_installed = { "codelldb" },
+
+      -- The handlers table allows us to customize certain debuggers
       handlers = {
-        codelldb = {
-          setup = function()
-            local dap = require("dap")
-            dap.adapters.codelldb = {
-              type = 'server',
-              port = "${port}",
-              executable = {
-                command = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/adapter/codelldb",
-                args = {"--port", "${port}"},
-              }
-            }
-          end
-        }
-      }
-    }
+        -- default handler:
+        function(config)
+          require("mason-nvim-dap").default_setup(config)
+        end,
+
+        -- override codelldb handler
+        codelldb = function(config)
+          -- Here you define your debug configurations for C, C++
+          config.configurations = {
+            {
+              -- This name shows in :DapStart ...
+              name = "Launch file (C/C++)",
+              type = "codelldb",
+              request = "launch",
+              -- Ask for an executable to debug
+              program = function()
+                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/build/", "file")
+              end,
+              cwd = "${workspaceFolder}",
+              stopOnEntry = false,
+              -- You can pass other codelldb-specific options here if needed
+            },
+          }
+
+          -- Finalize with default setup
+          require("mason-nvim-dap").default_setup(config)
+        end,
+      },
+    },
   },
   {
     "joerdav/templ.vim"
@@ -120,17 +131,7 @@ local plugins = {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
     opts = function()
-      local null_ls = require("null-ls")
-      return {
-        sources = {
-          null_ls.builtins.formatting.clang_format,
-          null_ls.builtins.diagnostics.ruff,
-          null_ls.builtins.diagnostics.mypy,
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.gofumpt,
-          null_ls.builtins.formatting.goimports_reviser,
-        },
-      }
+      return require "custom.configs.null-ls"
     end,
   },
   {
