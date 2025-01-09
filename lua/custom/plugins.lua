@@ -1,6 +1,7 @@
 local plugins = {
   {
     "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },  -- Add this line
     opts = {
       ensure_installed = {
         "pyright",
@@ -20,17 +21,25 @@ local plugins = {
         "templ",
       }
     },
+    config = function(_, opts)
+      require("mason").setup(opts)
+      -- Create MasonInstallAll command
+      vim.api.nvim_create_user_command("MasonInstallAll", function()
+        vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
+      end, {})
+    end,
   },
   {
-    "nvim-neotest/nvim-nio"
+    "nvim-neotest/nvim-nio"  -- Add this dependency
   },
-{
-  "mfussenegger/nvim-dap",
-  lazy = false,  -- or remove event/ft triggers
-  config = function(_, _)
-    require("core.utils").load_mappings("dap")
-  end,
-},
+  {
+    "mfussenegger/nvim-dap",
+    lazy = false,
+    config = function()
+      vim.keymap.set("n", "<leader>db", "<cmd>DapToggleBreakpoint<CR>", { desc = "Toggle breakpoint" })
+      vim.keymap.set("n", "<leader>dr", "<cmd>DapContinue<CR>", { desc = "Continue debugger" })
+    end,
+  },
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
