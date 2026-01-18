@@ -4,16 +4,24 @@ local plugins = {
     cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },  -- Add this line
     opts = {
       ensure_installed = {
+        -- Python
         "pyright",
+        "ruff",
+        "black",
+        "mypy",
+        "debugpy",
+        -- JavaScript/TypeScript
+        "typescript-language-server",
+        "eslint-lsp",
+        "prettier",
+        -- C/C++
         "clangd",
         "clang-format",
         "codelldb",
-        "mypy",
-        "ruff",
-        "black",
-        "debugpy",
+        -- Go
         "golines",
         "goimports",
+        -- Web
         "htmx-lsp",
         "css-lsp",
         "html-lsp",
@@ -265,14 +273,7 @@ local plugins = {
       return require "custom.configs.null-ls"
     end,
   },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "plugins.configs.lspconfig"
-      require "custom.configs.lspconfig"
-    end,
-  },
-  {
+    {
     "p00f/clangd_extensions.nvim",
     lazy = true,
     config = function() end,
